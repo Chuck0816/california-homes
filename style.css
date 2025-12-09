@@ -17,9 +17,12 @@
     Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family);
@@ -54,7 +57,9 @@ html, body {
   align-items: center;
 }
 
-.brand { font-weight: 700; }
+.brand {
+  font-weight: 700;
+}
 
 /* 搜索条：Destination + Button */
 .searchbar {
@@ -115,14 +120,18 @@ html, body {
   background: var(--brand);
   color: #fff;
 }
-.btn-primary:hover { background: var(--brand-ink); }
+.btn-primary:hover {
+  background: var(--brand-ink);
+}
 
 .btn-ghost {
   background: #fff;
   border: 1px solid var(--line);
   color: var(--ink);
 }
-.btn-ghost:hover { background: var(--card); }
+.btn-ghost:hover {
+  background: var(--card);
+}
 
 /* =========================
    Generic Containers
@@ -140,16 +149,19 @@ html, body {
   box-shadow: var(--shadow);
 }
 
-/* 主区域：左边结果 + 右边地图 */
+/* =========================
+   Main Grid
+========================= */
 #mainGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr); /* 默认只显示左侧 */
+  grid-template-columns: minmax(0, 1fr); /* 默认：只显示列表那一列 */
   gap: 20px;
   transition: 0.3s ease;
 }
 
+/* 地图模式：只显示地图这一列 */
 #mainGrid.map-open {
-  grid-template-columns: minmax(0, 1fr) 360px; /* 打开 map 时右侧出现一列 */
+  grid-template-columns: 1fr;
 }
 
 /* =========================
@@ -186,7 +198,9 @@ html, body {
 /* =========================
    Results list + cards
 ========================= */
-.results { padding: 16px 18px 20px; }
+.results {
+  padding: 16px 18px 20px;
+}
 
 .result-list {
   display: grid;
@@ -195,7 +209,7 @@ html, body {
   margin-top: 16px;
 }
 
-/* 新的卡片样式：配合 ui.js 的 .home-card */
+/* 卡片 */
 .home-card {
   background: #fff;
   border-radius: 16px;
@@ -252,13 +266,20 @@ html, body {
 ========================= */
 #mapPanel {
   padding: 5px;
-  display: none; /* 默认隐藏 */
+  display: none; /* 默认不展示地图 */
 }
 
+/* 进入地图模式时：隐藏左侧 section，只保留 mapPanel */
+#mainGrid.map-open > section {
+  display: none;
+}
+
+/* 地图模式下显示 mapPanel */
 #mainGrid.map-open #mapPanel {
-  display: flex; /* 点击 Map 后展示地图列 */
+  display: block;
 }
 
+/* 地图基础样式 */
 .mapBox {
   height: 520px;
   width: 100%;
@@ -273,10 +294,19 @@ html, body {
   border: 1px solid var(--line);
 }
 
+/* 地图全屏铺满视口（减掉顶部导航高度） */
+#mainGrid.map-open .mapBox {
+  width: 100%;
+  height: calc(100vh - 120px); /* 120 可以按你导航条实际高度微调 */
+  border-radius: 16px;          /* 想要完全贴边就改成 0 */
+}
+
 /* =========================
    Advanced filters
 ========================= */
-#advWrap .card { margin-bottom: 8px; }
+#advWrap .card {
+  margin-bottom: 8px;
+}
 
 .adv {
   display: grid;
@@ -306,6 +336,7 @@ html, body {
   color: var(--sub);
   font-size: 14px;
 }
+
 .loading {
   padding: 24px 0;
   text-align: center;
@@ -319,7 +350,7 @@ html, body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -355,25 +386,41 @@ html, body {
    Responsive
 ========================= */
 @media (max-width: 1100px) {
+  /* 地图模式在中屏依然是单列 */
   #mainGrid.map-open {
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 900px) {
-  .topwrap { grid-template-columns: 1fr; row-gap: 12px; }
-  .searchbar { grid-template-columns: 1fr; }
+  .topwrap {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .searchbar {
+    grid-template-columns: 1fr;
+  }
 
   #mainGrid,
   #mainGrid.map-open {
     grid-template-columns: 1fr;
   }
 
-  #mapPanel {
-    height: calc(100vh - 140px);
-    min-height: 500px;
+  /* 小屏时地图高度保持全屏效果 */
+  #mainGrid.map-open .mapBox {
+    height: calc(100vh - 120px);
   }
-  #map { width: 100%; height: 100%; }
+
+  #mapPanel {
+    height: auto;
+    min-height: 0;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
 
   .result-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -381,7 +428,13 @@ html, body {
 }
 
 @media (max-width: 640px) {
-  .result-list { grid-template-columns: 1fr; }
-  .hero-banner { height: 260px; }
-  .adv { grid-template-columns: 1fr; }
+  .result-list {
+    grid-template-columns: 1fr;
+  }
+  .hero-banner {
+    height: 260px;
+  }
+  .adv {
+    grid-template-columns: 1fr;
+  }
 }

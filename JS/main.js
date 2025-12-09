@@ -154,7 +154,7 @@ import { renderHouses, showLoading } from "./ui.js";
       showLoading();
       const rows = await fetchHouses(buildParams());
       currentRows = Array.isArray(rows) ? rows : [];
-      window.__rows = currentRows; // 方便你在 console 里调试
+      window.__rows = currentRows; // console 调试用
 
       renderHouses(currentRows);
 
@@ -187,16 +187,19 @@ import { renderHouses, showLoading } from "./ui.js";
 
   function toggleMap() {
     if (!el.mainGrid) return;
+
     const isOpen = el.mainGrid.classList.toggle("map-open");
     console.log("[map] toggle, open =", isOpen);
 
     if (isOpen) {
-      // 打开 map 的时候尝试渲染一次 marker
+      // 进入“地图界面”
+      if (el.toggleMapBtn) el.toggleMapBtn.textContent = "List";
       refreshMap();
-
-      if (el.mapPanel) {
-        el.mapPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // 回到“列表界面”
+      if (el.toggleMapBtn) el.toggleMapBtn.textContent = "Map";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
